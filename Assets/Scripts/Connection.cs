@@ -10,6 +10,8 @@ namespace BridgeGame
         public float length;
         public float preferedLength;
         public float forceMultiplier = 10f;
+        public ConnectionView view;
+        public Bridge bridge;
 
         public void Evaluate(Dictionary<ConnectionPoint, Vector2> calculatedForces)
         {
@@ -53,7 +55,6 @@ namespace BridgeGame
 
         public void DrawDebug()
         {
-            Debug.Log(CalculateForce());
             Debug.DrawLine(a.position, b.position, Color.Lerp(Color.blue, Color.red, CalculateForce()));
         }
     }
