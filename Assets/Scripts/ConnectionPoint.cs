@@ -6,9 +6,9 @@ namespace BridgeGame
     {
         public Vector2 preferedPosition = new Vector2();
         public Vector2 position = new Vector2();
-        public float gravity = -1f;
+        
         public bool locked;
-        public float damping = 10;
+        
         public Vector2 velocity = new Vector2();
         public float mass = 1;
         public ConnectionPointView view;
@@ -19,8 +19,8 @@ namespace BridgeGame
             if (locked)
                 return;
 
-            Vector2 dampingForce = velocity * damping;
-            Vector2 force = connectionsForce + mass * new Vector2(0, gravity) - dampingForce;
+            Vector2 dampingForce = velocity * bridge.damping;
+            Vector2 force = connectionsForce + mass * new Vector2(0, bridge.gravity) - dampingForce;
             Vector2 acceleration = force / mass;
             velocity += acceleration * Time.fixedDeltaTime;
             position += velocity;

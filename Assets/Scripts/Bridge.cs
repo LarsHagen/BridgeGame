@@ -6,6 +6,10 @@ namespace BridgeGame
 {
     public class Bridge : MonoBehaviour
     {
+        public float connectionForce = 20f;
+        public float gravity = -1f;
+        public float damping = 10;
+
         public ConnectionPointView pointViewPrefab;
         public ConnectionView connectionViewPrefab;
 
@@ -25,7 +29,10 @@ namespace BridgeGame
         public void StopSimulation()
         {
             foreach (var point in points)
+            {
                 point.position = point.preferedPosition;
+                point.velocity = Vector2.zero;
+            }
 
             SimulationRunning = false;
         }

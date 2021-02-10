@@ -9,7 +9,6 @@ namespace BridgeGame
         public ConnectionPoint b;
         public float length;
         public float preferedLength;
-        public float forceMultiplier = 10f;
         public ConnectionView view;
         public Bridge bridge;
 
@@ -50,7 +49,7 @@ namespace BridgeGame
         private float CalculateForce()
         {
             length = Vector2.Distance(a.position, b.position);
-            return (length - preferedLength) * forceMultiplier;
+            return (length - preferedLength) * bridge.connectionForce;
         }
 
         public void DrawDebug()
