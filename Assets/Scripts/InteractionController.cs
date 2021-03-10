@@ -4,7 +4,7 @@ namespace BridgeGame
 {
     public class InteractionController : MonoBehaviour
     {
-        public enum Tool { Move, Delete, Build}
+        public enum Tool { Move, Delete, Build, ChangeType}
         public Tool selectedTool;
     }
 }

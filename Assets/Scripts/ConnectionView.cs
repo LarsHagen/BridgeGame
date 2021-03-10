@@ -7,6 +7,7 @@ namespace BridgeGame
     {
         public Connection connection;
         private InteractionController interactionController;
+        public Collider2D roadCollider;
 
         private void Awake()
         {
@@ -25,13 +26,19 @@ namespace BridgeGame
                 connection.bridge.AddConnection(newPoint, connection.b);
                 connection.b = newPoint;
             }
+            else if (interactionController.selectedTool == InteractionController.Tool.ChangeType)
+            {
+                connection.isRoad = !connection.isRoad;
+            }
         }
 
         private void Update()
         {
             transform.position = Vector3.Lerp(connection.a.position, connection.b.position, 0.5f);
-            transform.LookAt(connection.b.position);
+            transform.LookAt(connection.b.position, new Vector3(0,0,1));
             transform.localScale = new Vector3(0.1f, 0.1f, connection.length);
+
+            roadCollider.gameObject.SetActive(connection.isRoad);
         }
     }
 }

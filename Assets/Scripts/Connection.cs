@@ -11,6 +11,7 @@ namespace BridgeGame
         public float preferedLength;
         public ConnectionView view;
         public Bridge bridge;
+        public bool isRoad;
 
         public void Evaluate(Dictionary<ConnectionPoint, Vector2> calculatedForces)
         {

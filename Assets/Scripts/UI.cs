@@ -9,6 +9,7 @@ namespace BridgeGame
         [SerializeField] private Toggle moveToggle;
         [SerializeField] private Toggle deleteToggle;
         [SerializeField] private Toggle buildToggle;
+        [SerializeField] private Toggle changeToggle;
 
         [SerializeField] private Button simulationButton;
 
@@ -21,6 +22,7 @@ namespace BridgeGame
             moveToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Move; });
             deleteToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Delete; });
             buildToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Build; });
+            changeToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.ChangeType; });
 
             simulationButton.onClick.AddListener(StartStopSimulation);
         }

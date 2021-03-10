@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,16 +11,24 @@ namespace BridgeGame
         public float gravity = -1f;
         public float damping = 10;
 
+        public Level level;
+
         public ConnectionPointView pointViewPrefab;
         public ConnectionView connectionViewPrefab;
 
         public static List<Connection> connections = new List<Connection>();
         public static List<ConnectionPoint> points = new List<ConnectionPoint>();
 
+        public Rigidbody2D testSphere;
+
         public bool SimulationRunning { get; private set; }
 
         public void StartSimulation()
         {
+            testSphere.simulated = true;
+            testSphere.transform.position = level.start.position;
+            testSphere.velocity = Vector2.zero;
+
             foreach (var connection in connections)
                 connection.preferedLength = Vector2.Distance(connection.a.preferedPosition, connection.b.preferedPosition);
 
@@ -28,6 +37,8 @@ namespace BridgeGame
 
         public void StopSimulation()
         {
+            testSphere.simulated = false;
+
             foreach (var point in points)
             {
                 point.position = point.preferedPosition;
@@ -39,9 +50,16 @@ namespace BridgeGame
 
         private void Start()
         {
-            TestPoints();
-            TestConnection();
+            SetupLevel();
             StopSimulation();
+
+            testSphere.simulated = false;
+        }
+
+        private void SetupLevel()
+        {
+            foreach (var point in level.attachmentPoints)
+                AddPoint(point.transform.position, true);
         }
 
         public void RemovePoint(ConnectionPoint point)
@@ -118,21 +136,6 @@ namespace BridgeGame
             return connection;
         }
 
-        private void TestConnection()
-        {
-            AddConnection(points[0], points[1]);
-            AddConnection(points[1], points[2]);
-            AddConnection(points[2], points[3]);
-        }
-
-        private void TestPoints()
-        {
-            AddPoint(new Vector2(0, 0), true);
-            AddPoint(new Vector2(1, 0));
-            AddPoint(new Vector2(2, 0));
-            AddPoint(new Vector2(3, 0), true);
-        }
-
         private void FixedUpdate()
         {
             if (!SimulationRunning)
@@ -143,9 +146,10 @@ namespace BridgeGame
 
             foreach (var calculatedForce in calculatedForces)
             {
-                //calculatedForce.Key.transform.position += (Vector3)calculatedForce.Value;
                 calculatedForce.Key.ApplyForce(calculatedForce.Value);
             }
+
+            testSphere.AddForce(new Vector2(0.25f, 0f));
         }
 
         private void Update()
