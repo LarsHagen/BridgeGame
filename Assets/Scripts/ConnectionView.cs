@@ -46,7 +46,13 @@ namespace BridgeGame
 
             roadCollider.gameObject.SetActive(connection.isRoad);
             meshRenderer.material.SetColor("ColorMain", connection.isRoad ? colorRoad : colorDefault);
-            meshRenderer.material.SetFloat("Stress", connection.CalculateForce());
+
+            if (connection.bridge.SimulationRunning)
+                meshRenderer.material.SetFloat("Stress", Mathf.Abs(connection.CalculateForce()) / connection.maxStress);
+            else
+                meshRenderer.material.SetFloat("Stress", 0);
+
+            meshRenderer.enabled = !connection.broken;
         }
     }
 }

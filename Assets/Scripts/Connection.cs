@@ -12,10 +12,18 @@ namespace BridgeGame
         public ConnectionView view;
         public Bridge bridge;
         public bool isRoad;
+        public float maxStress = 1.5f;
+        public bool broken;
 
         public void Evaluate(Dictionary<ConnectionPoint, Vector2> calculatedForces)
         {
             float force = CalculateForce();
+
+            if (Mathf.Abs(force) > maxStress || broken)
+            {
+                broken = true;
+                return;
+            }
 
             Vector2 direction = (b.position - a.position).normalized;
 

@@ -45,6 +45,9 @@ namespace BridgeGame
                 point.velocity = Vector2.zero;
             }
 
+            foreach (var connection in connections)
+                connection.broken = false;
+
             SimulationRunning = false;
         }
 
@@ -144,9 +147,12 @@ namespace BridgeGame
             Dictionary<ConnectionPoint, Vector2> calculatedForces = new Dictionary<ConnectionPoint, Vector2>();
             connections.ForEach(c => c.Evaluate(calculatedForces));
 
-            foreach (var calculatedForce in calculatedForces)
+            foreach (var point in points)
             {
-                calculatedForce.Key.ApplyForce(calculatedForce.Value);
+                if (calculatedForces.ContainsKey(point))
+                    point.ApplyForce(calculatedForces[point]);
+                else
+                    point.ApplyForce(Vector2.zero);
             }
 
             testSphere.AddForce(new Vector2(0.25f, 0f));
