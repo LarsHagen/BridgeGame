@@ -47,7 +47,7 @@ namespace BridgeGame
                 calculatedForces.Add(b, forceB);
         }
 
-        private float CalculateForce()
+        public float CalculateForce()
         {
             length = Vector2.Distance(a.position, b.position);
             return (length - preferedLength) * bridge.connectionForce;

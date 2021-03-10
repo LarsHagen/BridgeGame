@@ -9,9 +9,15 @@ namespace BridgeGame
         private InteractionController interactionController;
         public Collider2D roadCollider;
 
+        public Color colorDefault;
+        public Color colorRoad;
+
+        private MeshRenderer meshRenderer;
+
         private void Awake()
         {
             interactionController = FindObjectOfType<InteractionController>();
+            meshRenderer = GetComponent<MeshRenderer>();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -39,6 +45,8 @@ namespace BridgeGame
             transform.localScale = new Vector3(0.1f, 0.1f, connection.length);
 
             roadCollider.gameObject.SetActive(connection.isRoad);
+            meshRenderer.material.SetColor("ColorMain", connection.isRoad ? colorRoad : colorDefault);
+            meshRenderer.material.SetFloat("Stress", connection.CalculateForce());
         }
     }
 }

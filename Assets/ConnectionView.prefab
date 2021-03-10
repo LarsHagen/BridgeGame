@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 8edb6a309eaf8f04eac265e570c243fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,6 +110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadCollider: {fileID: 7271769515295673020}
+  colorDefault: {r: 0.36850303, g: 0.8584906, b: 0.7012901, a: 1}
+  colorRoad: {r: 0.8962264, g: 0.6070016, b: 0.2325116, a: 1}
 --- !u!1 &6289822885182185591
 GameObject:
   m_ObjectHideFlags: 0
