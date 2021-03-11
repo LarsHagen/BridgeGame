@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BridgeGame
@@ -12,58 +13,41 @@ namespace BridgeGame
         public ConnectionView view;
         public Bridge bridge;
         public bool isRoad;
-        public float maxStress = 1.5f;
+        public float normalizedMaxDeformation = 0.05f;
         public bool broken;
 
-        public void Evaluate(Dictionary<ConnectionPoint, Vector2> calculatedForces)
+        public float addedWeight;
+
+        public float GetWeight()
         {
-            float force = CalculateForce();
+            return preferedLength * 2;
+        }
 
-            if (Mathf.Abs(force) > maxStress || broken)
-            {
-                broken = true;
-                return;
-            }
+        public float GetDeformation()
+        {
+            length = Vector2.Distance(a.position, b.position);
+            return (length - preferedLength);
+        }
 
-            Vector2 direction = (b.position - a.position).normalized;
-
-            Vector2 forceA = default;
-            Vector2 forceB = default;
-
-            if (a.locked)
-            {
-                forceB -= direction * force * 2;
-            }
-            else if (b.locked)
-            {
-                forceA += direction * force * 2;
-            }
-            else
-            {
-                forceA += direction * force;
-                forceB -= direction * force;
-            }
-
-            if (calculatedForces.ContainsKey(a))
-                calculatedForces[a] += forceA;
-            else
-                calculatedForces.Add(a, forceA);
-
-            if (calculatedForces.ContainsKey(b))
-                calculatedForces[b] += forceB;
-            else
-                calculatedForces.Add(b, forceB);
+        public float NormalizedDeformation()
+        {
+            return Mathf.Abs(GetDeformation()) / preferedLength;
         }
 
         public float CalculateForce()
         {
-            length = Vector2.Distance(a.position, b.position);
-            return (length - preferedLength) * bridge.connectionForce;
+            if (bridge.SimulationRunning && (NormalizedDeformation() > normalizedMaxDeformation || broken))
+            {
+                broken = true;
+                return 0f;
+            }
+
+            return GetDeformation() * bridge.connectionForce;
         }
 
         public void DrawDebug()
         {
-            Debug.DrawLine(a.position, b.position, Color.Lerp(Color.blue, Color.red, CalculateForce()));
+            Debug.DrawLine(a.position, b.position, Color.Lerp(Color.blue, Color.red, NormalizedDeformation()));
         }
     }
 }

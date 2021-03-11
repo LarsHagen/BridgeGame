@@ -7,9 +7,9 @@ namespace BridgeGame
 {
     public class Bridge : MonoBehaviour
     {
-        public float connectionForce = 20f;
-        public float gravity = -1f;
-        public float damping = 10;
+        public float connectionForce = 100f;
+        public float gravity = -0.1f;
+        public float damping = 1;
 
         public Level level;
 
@@ -93,6 +93,8 @@ namespace BridgeGame
 
         public void RemoveConnection(Connection connection)
         {
+            connection.a.connections.Remove(connection);
+            connection.b.connections.Remove(connection);
             Destroy(connection.view.gameObject);
             connections.Remove(connection);
         }
@@ -130,6 +132,8 @@ namespace BridgeGame
                 preferedLength = Vector2.Distance(pointA.position, pointB.position),
                 bridge = this
             };
+            pointA.connections.Add(connection);
+            pointB.connections.Add(connection);
             connections.Add(connection);
 
             var view = Instantiate(connectionViewPrefab);
@@ -144,15 +148,14 @@ namespace BridgeGame
             if (!SimulationRunning)
                 return;
 
-            Dictionary<ConnectionPoint, Vector2> calculatedForces = new Dictionary<ConnectionPoint, Vector2>();
-            connections.ForEach(c => c.Evaluate(calculatedForces));
+            foreach (var point in points)
+            {
+                point.CalculateAndApplyForces();
+            }
 
             foreach (var point in points)
             {
-                if (calculatedForces.ContainsKey(point))
-                    point.ApplyForce(calculatedForces[point]);
-                else
-                    point.ApplyForce(Vector2.zero);
+                point.ApplyVelocity();
             }
 
             testSphere.AddForce(new Vector2(0.25f, 0f));

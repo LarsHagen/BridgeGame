@@ -48,7 +48,7 @@ namespace BridgeGame
             meshRenderer.material.SetColor("ColorMain", connection.isRoad ? colorRoad : colorDefault);
 
             if (connection.bridge.SimulationRunning)
-                meshRenderer.material.SetFloat("Stress", Mathf.Abs(connection.CalculateForce()) / connection.maxStress);
+                meshRenderer.material.SetFloat("Stress", connection.NormalizedDeformation() / connection.normalizedMaxDeformation);
             else
                 meshRenderer.material.SetFloat("Stress", 0);
 
