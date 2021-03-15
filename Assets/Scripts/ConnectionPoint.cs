@@ -15,7 +15,7 @@ namespace BridgeGame
         public Bridge bridge;
         public List<Connection> connections = new List<Connection>();
 
-        public Dictionary<TestSphere, float> testSphereCollisions = new Dictionary<TestSphere, float>(); 
+        public List<Vector2> addedForces = new List<Vector2>();
 
         public void CalculateAndApplyForces()
         {
@@ -34,12 +34,20 @@ namespace BridgeGame
             }
 
             Vector2 gravity = calculatedMass * new Vector2(0, bridge.gravity);
-            ApplyForce(connectionsForce + gravity, calculatedMass);
+            Vector2 force = connectionsForce + gravity;
+            foreach (var f in addedForces)
+            {
+                //Debug.Log("Add force: " + f);
+                Debug.DrawRay(position, -f * 0.1f, Color.cyan);
+                force -= f;
+            }
+            addedForces.Clear();
+
+            ApplyForce(force, calculatedMass);
 
             Debug.DrawRay(position, gravity * 0.1f, Color.green);
             Debug.DrawRay(position, connectionsForce * 0.1f, Color.red);
-
-            testSphereCollisions.Clear();
+            Debug.DrawRay(position, force * 0.1f, Color.yellow);
         }
 
         private float GetMass()

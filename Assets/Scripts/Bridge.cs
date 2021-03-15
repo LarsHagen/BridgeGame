@@ -19,16 +19,10 @@ namespace BridgeGame
         public static List<Connection> connections = new List<Connection>();
         public static List<ConnectionPoint> points = new List<ConnectionPoint>();
 
-        public Rigidbody2D testSphere;
-
         public bool SimulationRunning { get; private set; }
 
         public void StartSimulation()
         {
-            testSphere.simulated = true;
-            testSphere.transform.position = level.start.position;
-            testSphere.velocity = Vector2.zero;
-
             foreach (var connection in connections)
                 connection.preferedLength = Vector2.Distance(connection.a.preferedPosition, connection.b.preferedPosition);
 
@@ -37,8 +31,6 @@ namespace BridgeGame
 
         public void StopSimulation()
         {
-            testSphere.simulated = false;
-
             foreach (var point in points)
             {
                 point.position = point.preferedPosition;
@@ -55,8 +47,6 @@ namespace BridgeGame
         {
             SetupLevel();
             StopSimulation();
-
-            testSphere.simulated = false;
         }
 
         private void SetupLevel()
@@ -157,8 +147,6 @@ namespace BridgeGame
             {
                 point.ApplyVelocity();
             }
-
-            testSphere.AddForce(new Vector2(0.25f, 0f));
         }
 
         private void Update()

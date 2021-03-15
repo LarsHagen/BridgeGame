@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,39 +9,27 @@ namespace BridgeGame
     {
         public Bridge bridge;
         public Level level;
+        new public Rigidbody2D rigidbody2D;
+        public float acceleration;
+        public float topspeed;
 
-        public float weight;
-
-        private void OnCollisionStay2D(Collision2D collision)
+        private void FixedUpdate()
         {
-            var connection = collision.collider.GetComponentInParent<ConnectionView>()?.connection;
-
-            if (connection != null)
+            if (bridge.SimulationRunning)
             {
-                float distA = Vector2.Distance(collision.contacts[0].point, connection.a.position);
-                float totalDist = Vector2.Distance(connection.a.position, connection.b.position);
-
-                float normalA = distA / totalDist;
-
-                float weightA = Mathf.Lerp(weight, 0, normalA);
-                float weightB = weight - weightA;
-
-
-                Debug.Log("A: " + weightA);
-                Debug.Log("B: " + weightB);
-
-
-
-                if (connection.a.testSphereCollisions.ContainsKey(this))
-                    connection.a.testSphereCollisions[this] = weightA;
-                else
-                    connection.a.testSphereCollisions.Add(this, weightA);
-
-                if (connection.b.testSphereCollisions.ContainsKey(this))
-                    connection.b.testSphereCollisions[this] = weightB;
-                else
-                    connection.b.testSphereCollisions.Add(this, weightB);
+                rigidbody2D.simulated = true;
+                if (rigidbody2D.velocity.x < topspeed)
+                    rigidbody2D.AddForce(new Vector2(acceleration, 0));
             }
+            else
+            {
+                rigidbody2D.simulated = false;
+                transform.position = level.start.position;
+                rigidbody2D.velocity = Vector2.zero;
+            }
+
+            //DoGravityForce();
         }
+
     }
 }

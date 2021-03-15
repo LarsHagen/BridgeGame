@@ -16,11 +16,9 @@ namespace BridgeGame
         public float normalizedMaxDeformation = 0.05f;
         public bool broken;
 
-        public float addedWeight;
-
         public float GetWeight()
         {
-            return preferedLength * 2;
+            return preferedLength * 3;
         }
 
         public float GetDeformation()
