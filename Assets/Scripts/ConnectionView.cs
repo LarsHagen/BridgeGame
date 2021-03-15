@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace BridgeGame
@@ -7,7 +8,8 @@ namespace BridgeGame
     {
         public Connection connection;
         private InteractionController interactionController;
-        public Collider2D roadCollider;
+
+        public EdgeCollider2D edgeCollider;
 
         public Color colorDefault;
         public Color colorRoad;
@@ -29,7 +31,7 @@ namespace BridgeGame
             else if (interactionController.selectedTool == InteractionController.Tool.Build)
             {
                 var newPoint = connection.bridge.AddPoint(eventData.pointerCurrentRaycast.worldPosition);
-                connection.bridge.AddConnection(newPoint, connection.b);
+                connection.bridge.AddConnection(newPoint, connection.b, interactionController.selectedType);
                 connection.b = newPoint;
             }
             else if (interactionController.selectedTool == InteractionController.Tool.ChangeType)
@@ -38,21 +40,14 @@ namespace BridgeGame
             }
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            transform.position = Vector3.Lerp(connection.a.position, connection.b.position, 0.5f);
-            transform.LookAt(connection.b.position, new Vector3(0,0,1));
-            transform.localScale = new Vector3(0.1f, 0.1f, connection.length);
-
-            roadCollider.gameObject.SetActive(connection.isRoad);
-            meshRenderer.material.SetColor("ColorMain", connection.isRoad ? colorRoad : colorDefault);
-
-            if (connection.bridge.SimulationRunning)
-                meshRenderer.material.SetFloat("Stress", connection.NormalizedDeformation() / connection.normalizedMaxDeformation);
-            else
-                meshRenderer.material.SetFloat("Stress", 0);
-
-            meshRenderer.enabled = !connection.broken;
+            transform.localScale = new Vector3(Vector2.Distance(connection.a.physics.position, connection.b.physics.position), 0.1f, 0.1f);
+            transform.position = Vector2.Lerp(connection.a.physics.position, connection.b.physics.position, 0.5f);
+            //transform.right = transform.position - (Vector3)connection.b.physics.position;
+            Vector3 dir = connection.b.physics.transform.position - transform.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 }

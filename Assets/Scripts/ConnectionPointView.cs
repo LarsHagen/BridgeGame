@@ -15,8 +15,14 @@ namespace BridgeGame
             interactionController = FindObjectOfType<InteractionController>();
         }
 
+        private void LateUpdate()
+        {
+            transform.position = point.physics.position;
+        }
+
         public void OnDrag(PointerEventData eventData)
         {
+            Debug.Log("Drag");
             if (interactionController.selectedTool == InteractionController.Tool.Move)
             {
                 Plane plane = new Plane(Vector3.forward, Vector3.zero);
@@ -26,6 +32,8 @@ namespace BridgeGame
                     Vector3 hitPoint = ray.GetPoint(enter);
                     transform.position = hitPoint;
                     point.position = point.preferedPosition = transform.position;
+
+                    Debug.Log("MOVE!");
                 }
             }
         }
@@ -36,10 +44,6 @@ namespace BridgeGame
                 point.bridge.RemovePoint(point);
         }
 
-        private void Update()
-        {
-            transform.position = point.position;
-        }
         public void OnPointerExit(PointerEventData eventData)
         {
             if (buildEnd == this)
@@ -54,7 +58,7 @@ namespace BridgeGame
         public void OnEndDrag(PointerEventData eventData)
         {
             if (buildEnd != null)
-                point.bridge.AddConnection(point, buildEnd.point);
+                point.bridge.AddConnection(point, buildEnd.point, interactionController.selectedType);
             else
             {
                 Plane plane = new Plane(Vector3.forward, Vector3.zero);
@@ -63,7 +67,9 @@ namespace BridgeGame
                 {
                     Vector3 hitPoint = ray.GetPoint(enter);
                     var newPoint = point.bridge.AddPoint(hitPoint);
-                    point.bridge.AddConnection(point, newPoint);
+                    point.bridge.AddConnection(point, newPoint, interactionController.selectedType);
+
+                    Debug.Log("BUILD!");
                 }
             }
         }

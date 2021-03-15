@@ -6,5 +6,8 @@ namespace BridgeGame
     {
         public enum Tool { Move, Delete, Build, ChangeType}
         public Tool selectedTool;
+
+        public enum ConnectionType { Steel, Road }
+        public ConnectionType selectedType;
     }
 }

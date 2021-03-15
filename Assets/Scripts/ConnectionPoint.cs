@@ -9,76 +9,43 @@ namespace BridgeGame
         public Vector2 position = new Vector2();
         
         public bool locked;
-        
         public Vector2 velocity = new Vector2();
-        public ConnectionPointView view;
+        
         public Bridge bridge;
         public List<Connection> connections = new List<Connection>();
-
         public List<Vector2> addedForces = new List<Vector2>();
 
-        public void CalculateAndApplyForces()
+        public ConnectionPointView view;
+        public Rigidbody2D physics;
+
+        public ConnectionPoint(Vector2 position, bool locked, Bridge bridge)
         {
+            this.position = position;
+            this.locked = locked;
+            this.bridge = bridge;
+
+            physics = new GameObject("PhysicsPoint").AddComponent<Rigidbody2D>();
+            physics.transform.position = position;
+
             if (locked)
-                return;
-
-            float calculatedMass = GetMass();
-
-            var connectionsForce = Vector2.zero;
-            foreach (var connection in connections)
-            {
-                Vector2 direction = (connection.a == this ? connection.b.position : connection.a.position) - position;
-                direction.Normalize();
-                var connectionForce = (connection.CalculateForce());
-                connectionsForce += direction * connectionForce;
-            }
-
-            Vector2 gravity = calculatedMass * new Vector2(0, bridge.gravity);
-            Vector2 force = connectionsForce + gravity;
-            foreach (var f in addedForces)
-            {
-                //Debug.Log("Add force: " + f);
-                Debug.DrawRay(position, -f * 0.1f, Color.cyan);
-                force -= f;
-            }
-            addedForces.Clear();
-
-            ApplyForce(force, calculatedMass);
-
-            Debug.DrawRay(position, gravity * 0.1f, Color.green);
-            Debug.DrawRay(position, connectionsForce * 0.1f, Color.red);
-            Debug.DrawRay(position, force * 0.1f, Color.yellow);
+                physics.constraints = RigidbodyConstraints2D.FreezePosition;
         }
 
-        private float GetMass()
+        internal void StartSimulation()
         {
-            float calculatedMass = 0.1f;
-            foreach (var connection in connections)
-                if (!connection.broken)
-                    calculatedMass += connection.GetWeight() / 2f;
-            return calculatedMass;
+            physics.velocity = Vector2.zero;
         }
 
-        private void ApplyForce(Vector2 force, float mass)
+        internal void StopSimulation()
         {
-            if (locked)
-                return;
-
-            Vector2 dampingForce = velocity * bridge.damping;
-            force -= dampingForce;
-            Vector2 acceleration = force / mass;
-            velocity += acceleration * Time.fixedDeltaTime;
-        }
-
-        public void ApplyVelocity()
-        {
-            position += velocity;
+            physics.transform.position = position;
+            physics.velocity = Vector2.zero;
         }
 
         public void DrawDebug()
         {
-            Debug.DrawLine(position + new Vector2(-0.1f, -0.1f), position + new Vector2(0.1f, 0.1f), locked ? Color.blue : Color.white);
-            Debug.DrawLine(position + new Vector2(-0.1f, 0.1f), position + new Vector2(0.1f, -0.1f), locked ? Color.blue : Color.white);
+            Debug.DrawLine(physics.position + new Vector2(-0.1f, -0.1f), physics.position + new Vector2(0.1f, 0.1f), locked ? Color.blue : Color.white);
+            Debug.DrawLine(physics.position + new Vector2(-0.1f, 0.1f), physics.position + new Vector2(0.1f, -0.1f), locked ? Color.blue : Color.white);
         }
     }
 }
