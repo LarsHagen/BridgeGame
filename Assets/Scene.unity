@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTool: 2
-  selectedType: 0
+  selectedType: 1
 --- !u!4 &496317994
 Transform:
   m_ObjectHideFlags: 0

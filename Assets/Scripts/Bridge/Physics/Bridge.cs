@@ -15,10 +15,12 @@ namespace BridgeGame
         public Level level;
 
         public ConnectionPointView pointViewPrefab;
-        public ConnectionView connectionViewPrefab;
+        //public ConnectionView connectionViewPrefab;
 
-        public static List<Connection> connections = new List<Connection>();
-        public static List<ConnectionPoint> points = new List<ConnectionPoint>();
+        public List<IConnection> connections = new List<IConnection>();
+        public List<IPoint> points = new List<IPoint>();
+
+        public Dictionary<IPoint, ConnectionPointView> pointViews = new Dictionary<IPoint, ConnectionPointView>();
 
         public bool SimulationRunning { get; private set; }
 
@@ -59,53 +61,58 @@ namespace BridgeGame
                 AddPoint(point.transform.position, true);
         }
 
-        public void RemovePoint(ConnectionPoint point)
+        public void RemovePoint(IPoint point)
         {
             foreach (var connection in GetConnectionsAtPoint(point))
                 RemoveConnection(connection);
 
-            Destroy(point.view.gameObject);
+            point.Remove();
+
+            Destroy(pointViews[point].gameObject);
+            pointViews.Remove(point);
+
             points.Remove(point);
         }
 
-        public IReadOnlyList<Connection> GetConnectionsAtPoint(ConnectionPoint point)
+        public IReadOnlyList<IConnection> GetConnectionsAtPoint(IPoint point)
         {
-            var list = new List<Connection>();
+            var list = new List<IConnection>();
             foreach (var connection in connections)
             {
-                if (connection.a == point || connection.b == point)
+                if (connection.A == point || connection.B == point)
                     list.Add(connection);
             }
 
             return list;
         }
 
-        public Connection GetConnectionBetweenPoints(ConnectionPoint pointA, ConnectionPoint pointB)
+        public IConnection GetConnectionBetweenPoints(IPoint pointA, IPoint pointB)
         {
-            return GetConnectionsAtPoint(pointA).FirstOrDefault(c => c.a == pointB || c.b == pointB);
+            return GetConnectionsAtPoint(pointA).FirstOrDefault(c => c.A == pointB || c.B == pointB);
         }
 
-        public void RemoveConnection(Connection connection)
+        public void RemoveConnection(IConnection connection)
         {
-            connection.a.connections.Remove(connection);
-            connection.b.connections.Remove(connection);
-            //Destroy(connection.view.gameObject);
             connections.Remove(connection);
         }
 
-        public ConnectionPoint AddPoint(Vector2 position, bool locked = false)
+        public IPoint AddPoint(Vector2 position, bool locked = false)
         {
-            var point = new ConnectionPoint(position, locked, this);
-            points.Add(point);
+            IPoint point = locked ? new PointLocked() : new PointDefault();
+            point.Setup(position, this);
+
             var view = Instantiate(pointViewPrefab);
             view.transform.position = position;
             view.point = point;
-            point.view = view;
+            view.bridge = this;
+
+            pointViews.Add(point, view);
+            points.Add(point);
 
             return point;
         }
 
-        public Connection AddConnection(ConnectionPoint pointA, ConnectionPoint pointB, ConnectionType type)
+        public IConnection AddConnection(IPoint pointA, IPoint pointB, ConnectionType type)
         {
             if (GetConnectionBetweenPoints(pointA, pointB) != null)
             {
@@ -113,28 +120,32 @@ namespace BridgeGame
                 return null;
             }
 
-            var connection = new Connection(pointA, pointB, this, type == ConnectionType.Road);
-
-            pointA.connections.Add(connection);
-            pointB.connections.Add(connection);
+            IConnection connection;
+            switch (type)
+            {
+                case ConnectionType.Road:
+                    connection = new ConnectionRoad();
+                    break;
+                default:
+                    connection = new ConnectionSteel();
+                    break;
+            }
+            connection.Setup(pointA, pointB, this);
             connections.Add(connection);
-
-            var view = Instantiate(connectionViewPrefab);
-            view.connection = connection;
-            connection.view = view;
-
             return connection;
         }
 
         private void FixedUpdate()
         {
-            connections.ForEach(c => c.ShouldBreak());
+            foreach (var connection in connections)
+            {
+                if (!connection.Broken && connection.Stress() > 1f)
+                    connection.Break();
+            }
         }
 
         private void Update()
         {
-            connections.ForEach(c => c.DrawDebug());
-
             points.ForEach(p => p.DrawDebug());
             connections.ForEach(c => c.DrawDebug());
 

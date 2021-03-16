@@ -40,11 +40,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8443108724283272670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e5f59f77ff2d264997c7bdd9649cc49, type: 3}
+  m_Script: {fileID: 11500000, guid: b70f1c8d328786644b04ccdfd0d193ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionForce: 30
-  gravity: -0.25
+  connectionForce: 100
+  gravity: -0.1
   damping: 1
+  level: {fileID: 0}
   pointViewPrefab: {fileID: 5488132556621064900, guid: 1af33b2e69542b942b4b3be031706e65, type: 3}
-  connectionViewPrefab: {fileID: 4991570233894720360, guid: dcdf44022af99c14780e3acc8d27afa7, type: 3}

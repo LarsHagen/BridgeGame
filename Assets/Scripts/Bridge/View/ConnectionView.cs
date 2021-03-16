@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace BridgeGame
 {
-    public class ConnectionView : MonoBehaviour, IPointerClickHandler
+    /*public class ConnectionView : MonoBehaviour, IPointerClickHandler
     {
         public Connection connection;
         private InteractionController interactionController;
@@ -49,5 +49,5 @@ namespace BridgeGame
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
-    }
+    }*/
 }
