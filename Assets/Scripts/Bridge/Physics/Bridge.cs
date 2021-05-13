@@ -76,6 +76,8 @@ namespace BridgeGame
                 AddPoint(point.transform.position, true);
         }
 
+        
+
         public void RemovePoint(IPoint point)
         {
             foreach (var connection in GetConnectionsAtPoint(point))
@@ -93,7 +95,14 @@ namespace BridgeGame
         {
             ClearAll();
             CurrentLevel.gameObject.SetActive(false);
-            currentLevel++;
+            currentLevel = (int)Mathf.Repeat(currentLevel + 1, levels.Length);
+            SetupLevel();
+        }
+        public void PreviousLevel()
+        {
+            ClearAll();
+            CurrentLevel.gameObject.SetActive(false);
+            currentLevel = (int)Mathf.Repeat(currentLevel - 1, levels.Length);
             SetupLevel();
         }
 

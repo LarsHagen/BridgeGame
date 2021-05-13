@@ -16,6 +16,7 @@ namespace BridgeGame
 
         [SerializeField] private Button simulationButton;
         [SerializeField] private Button nextLevel;
+        [SerializeField] private Button previousLevel;
 
         [Header("External refs")]
         [SerializeField] private InteractionController interactionController;
@@ -40,6 +41,7 @@ namespace BridgeGame
             dropdown.onValueChanged.AddListener(selected => interactionController.selectedType = (ConnectionType)selected);
 
             nextLevel.onClick.AddListener(() => bridge.NextLevel());
+            previousLevel.onClick.AddListener(() => bridge.PreviousLevel());
         }
 
         private void Update()

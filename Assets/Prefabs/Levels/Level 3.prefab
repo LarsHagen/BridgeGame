@@ -103,6 +103,7 @@ MonoBehaviour:
   attachmentPoints:
   - {fileID: 1385442737418491535}
   - {fileID: 9052435991937891813}
+  - {fileID: 407571288234488745}
 --- !u!1 &2608563511432213324
 GameObject:
   m_ObjectHideFlags: 0

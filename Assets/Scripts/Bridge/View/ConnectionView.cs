@@ -72,6 +72,7 @@ namespace BridgeGame
 
             var visible = !bridge.SimulationRunning || !connection.Broken;
             meshRenderers.ForEach(mr => mr.enabled = visible);
+            roadRenderer.enabled = visible && connection.Type == ConnectionType.Road;
 
             Vector2 posA = connection.A.Rigidbody2D.position;
             Vector2 posB = connection.B.Rigidbody2D.position;
