@@ -51,7 +51,7 @@ namespace BridgeGame
                     Vector3 hitPoint = ray.GetPoint(enter);
                     var endPoint = interactionController.GridOn ? SnapToGrid(hitPoint) : hitPoint;
                     var startPoint = point.StartPosition;
-                    var stress = Vector2.Distance(startPoint, endPoint) > 2 ? 1 : 0;
+                    var stress = Vector2.Distance(startPoint, endPoint) > 2.1f ? 1 : 0;
                     ghost.Setposition(startPoint, endPoint, stress);
                 }
             }
@@ -105,7 +105,7 @@ namespace BridgeGame
                         if (interactionController.GridOn)
                             hitPoint = SnapToGrid(hitPoint);
 
-                        if (Vector2.Distance(point.StartPosition, hitPoint) > 2)
+                        if (Vector2.Distance(point.StartPosition, hitPoint) > 2.1f)
                             return;
 
                         var newPoint = bridge.AddPoint(hitPoint);

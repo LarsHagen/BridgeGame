@@ -15,10 +15,10 @@ namespace BridgeGame
         private float preferedLength;
         private Bridge bridge;
 
-        private float normalizedMaxDeformation = 0.02f;
-        private float stiffness = 17;
+        private float normalizedMaxDeformation = 0.04f;
+        private float stiffness = 12;
         private float dampingRatio = 0.5f;
-        private float weightPerLength = 5;
+        private float weightPerLength = 2;
 
 
         private Rigidbody2D road;

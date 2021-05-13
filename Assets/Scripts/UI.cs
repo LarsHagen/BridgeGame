@@ -44,8 +44,8 @@ namespace BridgeGame
 
             dropdown.onValueChanged.AddListener(selected => interactionController.selectedType = (ConnectionType)selected);
 
-            nextLevel.onClick.AddListener(() => bridge.NextLevel());
-            previousLevel.onClick.AddListener(() => bridge.PreviousLevel());
+            nextLevel.onClick.AddListener(() => gameController.NextLevel());
+            previousLevel.onClick.AddListener(() => gameController.PreviousLevel());
         }
 
         private void Update()
@@ -55,7 +55,7 @@ namespace BridgeGame
 
         private void StartStopSimulation()
         {
-            if (bridge.SimulationRunning)
+            if (gameController.SimulationRunning)
                 gameController.StopSimulation();
             else
                 gameController.StartSimulation();

@@ -14,10 +14,10 @@ namespace BridgeGame
         private float preferedLength;
         private Bridge bridge;
 
-        private float normalizedMaxDeformation = 0.02f;
-        private float stiffness = 15;
+        private float normalizedMaxDeformation = 0.04f;
+        private float stiffness = 10;
         private float dampingRatio = 0.5f;
-        private float weightPerLength = 2f;
+        private float weightPerLength = 1f;
 
         private SpringJoint2D joint;
 
