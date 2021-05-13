@@ -9,7 +9,7 @@ namespace BridgeGame
         public IPoint B { get; private set; }
         public ConnectionType Type => ConnectionType.Road;
         public bool Broken { get; private set; }
-        public float MaxLength => 2;
+        public float MaxLength => 2.1f;
 
         private float length;
         private float preferedLength;

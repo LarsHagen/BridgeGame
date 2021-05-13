@@ -8,11 +8,11 @@ namespace BridgeGame
     public class Car : MonoBehaviour
     {
         public Bridge bridge;
-        public Level level;
         new public Rigidbody2D rigidbody2D;
 
         private void FixedUpdate()
         {
+
             if (bridge.SimulationRunning)
             {
                 rigidbody2D.simulated = true;
@@ -20,7 +20,7 @@ namespace BridgeGame
             else
             {
                 rigidbody2D.simulated = false;
-                transform.position = new Vector3(level.start.position.x, level.start.position.y, transform.position.z);
+                transform.position = new Vector3(bridge.CurrentLevel.start.position.x, bridge.CurrentLevel.start.position.y, transform.position.z);
                 transform.rotation = Quaternion.identity;
                 rigidbody2D.velocity = Vector2.zero;
             }

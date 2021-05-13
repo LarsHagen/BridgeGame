@@ -7,7 +7,10 @@ namespace BridgeGame
 {
     public class Bridge : MonoBehaviour
     {
-        public Level level;
+        [SerializeField] private Level[] levels;
+        private int currentLevel;
+
+        public Level CurrentLevel => levels[currentLevel];
 
         public PointView pointViewPrefab;
         public ConnectionView connectionViewPrefab;
@@ -68,7 +71,8 @@ namespace BridgeGame
 
         private void SetupLevel()
         {
-            foreach (var point in level.attachmentPoints)
+            CurrentLevel.gameObject.SetActive(true);
+            foreach (var point in levels[currentLevel].attachmentPoints)
                 AddPoint(point.transform.position, true);
         }
 
@@ -83,6 +87,22 @@ namespace BridgeGame
             pointViews.Remove(point);
 
             points.Remove(point);
+        }
+
+        public void NextLevel()
+        {
+            ClearAll();
+            CurrentLevel.gameObject.SetActive(false);
+            currentLevel++;
+            SetupLevel();
+        }
+
+        private void ClearAll()
+        {
+            foreach (var point in points.ToArray())
+                RemovePoint(point);
+            foreach (var connection in connections.ToArray())
+                RemoveConnection(connection);
         }
 
         public IReadOnlyList<IConnection> GetConnectionsAtPoint(IPoint point)
