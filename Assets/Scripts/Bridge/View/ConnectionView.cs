@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,7 +16,7 @@ namespace BridgeGame
         public Color colorDefault;
         public Color colorRoad;
 
-        private MeshRenderer meshRenderer;
+        private List<MeshRenderer> meshRenderers;
         public MeshRenderer roadRenderer;
 
         public Bridge bridge;
@@ -23,7 +24,7 @@ namespace BridgeGame
         private void Awake()
         {
             interactionController = FindObjectOfType<InteractionController>();
-            meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
         }
 
         private void Start()
@@ -31,12 +32,13 @@ namespace BridgeGame
             if (ghost)
             {
                 roadRenderer.enabled = false;
-                meshRenderer.material.SetColor("ColorMain", colorGhost);
+                meshRenderers.ForEach(mr => mr.material.SetColor("ColorMain", colorGhost));
             }
             else
             {
                 roadRenderer.enabled = connection.Type == ConnectionType.Road;
-                meshRenderer.material.SetColor("ColorMain", connection.Type == ConnectionType.Road ? colorRoad : colorDefault);
+                var color = connection.Type == ConnectionType.Road ? colorRoad : colorDefault;
+                meshRenderers.ForEach(mr => mr.material.SetColor("ColorMain", color));
             }
         }
 
@@ -68,7 +70,8 @@ namespace BridgeGame
             if (ghost)
                 return;
 
-            meshRenderer.enabled = !bridge.SimulationRunning || !connection.Broken;
+            var visible = !bridge.SimulationRunning || !connection.Broken;
+            meshRenderers.ForEach(mr => mr.enabled = visible);
 
             Vector2 posA = connection.A.Rigidbody2D.position;
             Vector2 posB = connection.B.Rigidbody2D.position;
@@ -88,7 +91,7 @@ namespace BridgeGame
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-            meshRenderer.material.SetFloat("Stress", stress);
+            meshRenderers.ForEach(mr => mr.material.SetFloat("Stress", stress));
         }
     }
 }
