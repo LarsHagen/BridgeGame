@@ -13,6 +13,13 @@ namespace BridgeGame
         public void StartSimulation()
         {
             Rigidbody2D.velocity = Vector2.zero;
+
+            float weight = 0;
+            foreach (var connection in bridge.GetConnectionsAtPoint(this))
+            {
+                weight += connection.Weight() / 2f;
+            }
+            Rigidbody2D.mass = weight;
         }
 
         public void StopSimulation()

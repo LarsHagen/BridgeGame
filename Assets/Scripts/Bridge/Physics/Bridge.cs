@@ -2,30 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static BridgeGame.InteractionController;
 
 namespace BridgeGame
 {
     public class Bridge : MonoBehaviour
     {
-        public float connectionForce = 100f;
-        public float gravity = -0.1f;
-        public float damping = 1;
-
         public Level level;
 
-        public ConnectionPointView pointViewPrefab;
-        //public ConnectionView connectionViewPrefab;
+        public PointView pointViewPrefab;
+        public ConnectionView connectionViewPrefab;
 
         public List<IConnection> connections = new List<IConnection>();
         public List<IPoint> points = new List<IPoint>();
 
-        public Dictionary<IPoint, ConnectionPointView> pointViews = new Dictionary<IPoint, ConnectionPointView>();
+        public Dictionary<IPoint, PointView> pointViews = new Dictionary<IPoint, PointView>();
+        public Dictionary<IConnection, ConnectionView> connectionViews = new Dictionary<IConnection, ConnectionView>();
 
         public bool SimulationRunning { get; private set; }
 
         public void StartSimulation()
         {
+            if (!IsValid())
+            {
+                Debug.Log("Invalid bridge design");
+                return;
+            }
+
             foreach (var connection in connections)
                 connection.StartSimulation();
 
@@ -34,6 +36,15 @@ namespace BridgeGame
 
             Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
             SimulationRunning = true;
+        }
+
+        private bool IsValid()
+        {
+            foreach (var connection in connections)
+                if (Vector2.Distance(connection.A.StartPosition, connection.B.StartPosition) > connection.MaxLength)
+                    return false;
+
+            return true;
         }
 
         public void StopSimulation()
@@ -94,6 +105,9 @@ namespace BridgeGame
         public void RemoveConnection(IConnection connection)
         {
             connections.Remove(connection);
+            Destroy(connectionViews[connection].gameObject);
+            connectionViews.Remove(connection);
+            connection.Remove();
         }
 
         public IPoint AddPoint(Vector2 position, bool locked = false)
@@ -132,15 +146,25 @@ namespace BridgeGame
             }
             connection.Setup(pointA, pointB, this);
             connections.Add(connection);
+
+            var view = Instantiate(connectionViewPrefab);
+            view.connection= connection;
+            view.bridge = this;
+
+            connectionViews.Add(connection, view);
+
             return connection;
         }
 
         private void FixedUpdate()
         {
-            foreach (var connection in connections)
+            if (SimulationRunning)
             {
-                if (!connection.Broken && connection.Stress() > 1f)
-                    connection.Break();
+                foreach (var connection in connections)
+                {
+                    if (!connection.Broken && connection.Stress() > 1f)
+                        connection.Break();
+                }
             }
         }
 

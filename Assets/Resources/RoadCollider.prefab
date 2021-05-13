@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4124727184438279989}
   - component: {fileID: 4124727184438279990}
   - component: {fileID: 4124727184438279977}
-  - component: {fileID: 171822890548557983}
   - component: {fileID: 2621223407954873966}
   - component: {fileID: 7633448485709694871}
   m_Layer: 3
@@ -78,23 +77,6 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &171822890548557983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4124727184438279978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 140dadc7eb48aff43ade8ce51118e911, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hingeJoint2D: {fileID: 0}
-  sliderJoint2D: {fileID: 0}
-  wheelA: {fileID: 2621223407954873966}
-  wheelB: {fileID: 7633448485709694871}
-  edgeCollider2D: {fileID: 4124727184438279977}
 --- !u!235 &2621223407954873966
 WheelJoint2D:
   m_ObjectHideFlags: 0

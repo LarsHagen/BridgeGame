@@ -6,13 +6,19 @@ namespace BridgeGame
     {
         public IPoint A { get; private set; }
         public IPoint B { get; private set; }
-
+        public ConnectionType Type => ConnectionType.Steel;
         public bool Broken { get; private set; }
+        public float MaxLength => 2;
 
         private float length;
         private float preferedLength;
         private Bridge bridge;
+
         private float normalizedMaxDeformation = 0.02f;
+        private float stiffness = 15;
+        private float dampingRatio = 0.5f;
+        private float weightPerLength = 2f;
+
         private SpringJoint2D joint;
 
         private float GetDeformation()
@@ -51,7 +57,8 @@ namespace BridgeGame
             this.bridge = bridge;
 
             joint = A.Rigidbody2D.gameObject.AddComponent<SpringJoint2D>();
-            joint.frequency = 10;
+            joint.frequency = stiffness;
+            joint.dampingRatio = dampingRatio;
             joint.connectedBody = B.Rigidbody2D;
             joint.autoConfigureConnectedAnchor = false;
             joint.autoConfigureDistance = false;
@@ -71,6 +78,11 @@ namespace BridgeGame
         {
             joint.enabled = false;
             Broken = true;
+        }
+
+        public float Weight()
+        {
+            return weightPerLength * Vector2.Distance(A.StartPosition, B.StartPosition);
         }
     }
 }

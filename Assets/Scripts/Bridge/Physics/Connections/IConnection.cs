@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-
-namespace BridgeGame
+﻿namespace BridgeGame
 {
     public interface IConnection
     {
         IPoint A { get; }
         IPoint B { get; }
+        ConnectionType Type { get; }
         bool Broken { get; }
-
+        float MaxLength { get; }
+        
         void Setup(IPoint a, IPoint b, Bridge bridge);
         void StartSimulation();
         void StopSimulation();
@@ -20,5 +15,6 @@ namespace BridgeGame
         float Stress();
         void Break();
         void DrawDebug();
+        float Weight();
     }
 }

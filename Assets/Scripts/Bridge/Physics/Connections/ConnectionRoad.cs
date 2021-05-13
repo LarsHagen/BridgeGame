@@ -7,13 +7,19 @@ namespace BridgeGame
     {
         public IPoint A { get; private set; }
         public IPoint B { get; private set; }
-
+        public ConnectionType Type => ConnectionType.Road;
         public bool Broken { get; private set; }
+        public float MaxLength => 2;
 
         private float length;
         private float preferedLength;
         private Bridge bridge;
+
         private float normalizedMaxDeformation = 0.02f;
+        private float stiffness = 17;
+        private float dampingRatio = 0.5f;
+        private float weightPerLength = 5;
+
 
         private Rigidbody2D road;
         private WheelJoint2D jointA;
@@ -84,8 +90,8 @@ namespace BridgeGame
         {
             return new JointSuspension2D()
             {
-                dampingRatio = 0.7f,
-                frequency = 7,
+                dampingRatio = dampingRatio,
+                frequency = stiffness,
                 angle = 0
             };
         }
@@ -105,5 +111,11 @@ namespace BridgeGame
             road.gameObject.SetActive(false);
             Broken = true;
         }
+
+        public float Weight()
+        {
+            return weightPerLength * Vector2.Distance(A.StartPosition, B.StartPosition);
+        }
+
     }
 }
