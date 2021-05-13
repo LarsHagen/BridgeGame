@@ -22,8 +22,12 @@ namespace BridgeGame
         [SerializeField] private InteractionController interactionController;
         [SerializeField] private Bridge bridge;
 
+        private GameController gameController;
+
         private void Awake()
         {
+            gameController = FindObjectOfType<GameController>();
+
             moveToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Move; });
             deleteToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Delete; });
             buildToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Build; });
@@ -52,9 +56,9 @@ namespace BridgeGame
         private void StartStopSimulation()
         {
             if (bridge.SimulationRunning)
-                bridge.StopSimulation();
+                gameController.StopSimulation();
             else
-                bridge.StartSimulation();
+                gameController.StartSimulation();
         }
     }
 }

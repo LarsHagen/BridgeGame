@@ -3,24 +3,37 @@ using UnityEngine.EventSystems;
 
 namespace BridgeGame
 {
-    public class InteractionController : MonoBehaviour, IDragHandler, IBeginDragHandler
+    public class InteractionController : MonoBehaviour, IDragHandler
     {
         public enum Tool { Move, Delete, Build, ChangeType}
         public Tool selectedTool;
         public ConnectionType selectedType;
-        public bool gridOn;
+        public bool GridOn { get; private set; }
 
-        private Vector3 worldLast;
+        private MeshRenderer grid;
+
+        private void Awake()
+        {
+            grid = GetComponentInChildren<MeshRenderer>();
+        }
+
+        public void ShowGrid()
+        {
+            GridOn = true;
+            grid.enabled = true;
+        }
+
+        public void HideGrid()
+        {
+            GridOn = false;
+            grid.enabled = false;
+        }
 
         public void OnDrag(PointerEventData eventData)
         {
-            Camera.main.transform.position -= eventData.pointerCurrentRaycast.worldPosition - worldLast;
-            worldLast = eventData.pointerCurrentRaycast.worldPosition;
-        }
-
-        public void OnBeginDrag(PointerEventData eventData)
-        {
-            worldLast = eventData.pointerCurrentRaycast.worldPosition;
+            var last = Camera.main.ScreenToWorldPoint(eventData.position - eventData.delta);
+            var current = Camera.main.ScreenToWorldPoint(eventData.position);
+            Camera.main.transform.position += last - current;
         }
     }
 }

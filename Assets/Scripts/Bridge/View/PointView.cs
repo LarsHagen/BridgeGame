@@ -35,7 +35,7 @@ namespace BridgeGame
                 {
                     Vector3 hitPoint = ray.GetPoint(enter);
                     //transform.position = hitPoint;
-                    if (interactionController.gridOn)
+                    if (interactionController.GridOn)
                         hitPoint = SnapToGrid(hitPoint);
 
                     point.Move(hitPoint);
@@ -49,7 +49,7 @@ namespace BridgeGame
                 if (plane.Raycast(ray, out float enter))
                 {
                     Vector3 hitPoint = ray.GetPoint(enter);
-                    var endPoint = interactionController.gridOn ? SnapToGrid(hitPoint) : hitPoint;
+                    var endPoint = interactionController.GridOn ? SnapToGrid(hitPoint) : hitPoint;
                     var startPoint = point.StartPosition;
                     var stress = Vector2.Distance(startPoint, endPoint) > 2 ? 1 : 0;
                     ghost.Setposition(startPoint, endPoint, stress);
@@ -102,7 +102,7 @@ namespace BridgeGame
                     {
                         Vector3 hitPoint = ray.GetPoint(enter);
                         
-                        if (interactionController.gridOn)
+                        if (interactionController.GridOn)
                             hitPoint = SnapToGrid(hitPoint);
 
                         if (Vector2.Distance(point.StartPosition, hitPoint) > 2)
