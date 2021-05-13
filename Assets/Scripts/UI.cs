@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
 
 namespace BridgeGame
 {
@@ -10,6 +12,7 @@ namespace BridgeGame
         [SerializeField] private Toggle deleteToggle;
         [SerializeField] private Toggle buildToggle;
         [SerializeField] private Toggle changeToggle;
+        [SerializeField] private Dropdown dropdown;
 
         [SerializeField] private Button simulationButton;
 
@@ -25,6 +28,20 @@ namespace BridgeGame
             changeToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.ChangeType; });
 
             simulationButton.onClick.AddListener(StartStopSimulation);
+
+            List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+            foreach (var connectionType in (ConnectionType[]) Enum.GetValues(typeof(ConnectionType)))
+            {
+                options.Add(new Dropdown.OptionData(connectionType.ToString()));
+            }
+            dropdown.AddOptions(options);
+
+            dropdown.onValueChanged.AddListener(selected => interactionController.selectedType = (ConnectionType)selected);
+        }
+
+        private void Update()
+        {
+            dropdown.gameObject.SetActive(buildToggle.isOn || changeToggle.isOn);
         }
 
         private void StartStopSimulation()

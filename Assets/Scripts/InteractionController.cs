@@ -6,5 +6,7 @@ namespace BridgeGame
     {
         public enum Tool { Move, Delete, Build, ChangeType}
         public Tool selectedTool;
+        public ConnectionType selectedType;
+        public bool gridOn;
     }
 }
