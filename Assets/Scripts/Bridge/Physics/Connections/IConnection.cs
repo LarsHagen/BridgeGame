@@ -6,7 +6,6 @@
         IPoint B { get; }
         ConnectionType Type { get; }
         bool Broken { get; }
-        float MaxLength { get; }
         
         void Setup(IPoint a, IPoint b, Bridge bridge);
         void StartSimulation();

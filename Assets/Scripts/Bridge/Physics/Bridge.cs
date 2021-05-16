@@ -16,6 +16,8 @@ namespace BridgeGame
         public Dictionary<IPoint, PointView> pointViews = new Dictionary<IPoint, PointView>();
         public Dictionary<IConnection, ConnectionView> connectionViews = new Dictionary<IConnection, ConnectionView>();
 
+        public Dictionary<ConnectionType, float> maxLengths = new Dictionary<ConnectionType, float>();
+
         public bool SimulationRunning { get; private set; }
 
         public void StartSimulation()
@@ -39,7 +41,7 @@ namespace BridgeGame
         private bool IsValid()
         {
             foreach (var connection in connections)
-                if (Vector2.Distance(connection.A.StartPosition, connection.B.StartPosition) > connection.MaxLength)
+                if (Vector2.Distance(connection.A.StartPosition, connection.B.StartPosition) > maxLengths[connection.Type])
                     return false;
 
             return true;
@@ -56,6 +58,12 @@ namespace BridgeGame
                 connection.StopSimulation();
 
             SimulationRunning = false;
+        }
+
+        private void Awake()
+        {
+            maxLengths.Add(ConnectionType.Road, 2.1f);
+            maxLengths.Add(ConnectionType.Steel, 3.1f);
         }
 
         private void Start()

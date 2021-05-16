@@ -44,25 +44,7 @@ namespace BridgeGame
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (ghost)
-                return;
-
-            if (interactionController.selectedTool == InteractionController.Tool.Delete)
-            {
-                bridge.RemoveConnection(connection);
-            }
-            else if (interactionController.selectedTool == InteractionController.Tool.Build)
-            {
-                var newPoint = bridge.AddPoint(eventData.pointerCurrentRaycast.worldPosition);
-                bridge.AddConnection(newPoint, connection.B, connection.Type);
-                bridge.AddConnection(newPoint, connection.A, connection.Type);
-                bridge.RemoveConnection(connection);
-            }
-            else if (interactionController.selectedTool == InteractionController.Tool.ChangeType)
-            {
-                bridge.RemoveConnection(connection);
-                bridge.AddConnection(connection.A, connection.B, interactionController.selectedType);
-            }
+            interactionController.ClickedConnection(this, eventData);
         }
 
         private void LateUpdate()
@@ -79,7 +61,7 @@ namespace BridgeGame
 
             var stress = connection.Stress();
             if (!bridge.SimulationRunning)
-                stress = Vector2.Distance(posA, posB) <= connection.MaxLength ? 0 : 1;
+                stress = Vector2.Distance(posA, posB) <= bridge.maxLengths[connection.Type] ? 0 : 1;
 
             Setposition(posA, posB, stress);
         }
