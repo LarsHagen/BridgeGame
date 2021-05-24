@@ -41,6 +41,7 @@ namespace BridgeGame
             Rigidbody2D = new GameObject("Point").AddComponent<Rigidbody2D>();
             Rigidbody2D.transform.SetParent(bridge.transform);
             Rigidbody2D.transform.position = position;
+            Rigidbody2D.position = position;
             Rigidbody2D.gameObject.layer = LayerMask.NameToLayer("Bridge");
         }
 

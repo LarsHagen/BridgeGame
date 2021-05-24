@@ -3,4 +3,5 @@ This bridge game engine has the basics you would expect from a bridge game, you 
 ![bridge preview](https://www.larshagen.dk/Images/Fail2.gif)
 ## Links
 [Blog post](https://www.larshagen.dk/Projects/BridgeBuilder)
+
 [Webgl demo](https://larshagen.github.io/BridgeGame/)
