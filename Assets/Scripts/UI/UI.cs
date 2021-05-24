@@ -18,6 +18,8 @@ namespace BridgeGame
         [SerializeField] private Button nextLevel;
         [SerializeField] private Button previousLevel;
 
+        [SerializeField] private Text versionText;
+
         [Header("External refs")]
         [SerializeField] private InteractionController interactionController;
         [SerializeField] private Bridge bridge;
@@ -26,6 +28,8 @@ namespace BridgeGame
 
         private void Awake()
         {
+            versionText.text = "v. " + Application.version;
+
             gameController = FindObjectOfType<GameController>();
 
             moveToggle.onValueChanged.AddListener(on => { if (on) interactionController.selectedTool = InteractionController.Tool.Move; });
