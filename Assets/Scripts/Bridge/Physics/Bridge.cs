@@ -22,12 +22,6 @@ namespace BridgeGame
 
         public void StartSimulation()
         {
-            if (!IsValid())
-            {
-                Debug.Log("Invalid bridge design");
-                return;
-            }
-
             foreach (var connection in connections)
                 connection.StartSimulation();
 
@@ -38,7 +32,7 @@ namespace BridgeGame
             SimulationRunning = true;
         }
 
-        private bool IsValid()
+        public bool IsValid()
         {
             foreach (var connection in connections)
                 if (Vector2.Distance(connection.A.StartPosition, connection.B.StartPosition) > maxLengths[connection.Type])
@@ -188,14 +182,6 @@ namespace BridgeGame
         {
             points.ForEach(p => p.DrawDebug());
             connections.ForEach(c => c.DrawDebug());
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (SimulationRunning)
-                    StopSimulation();
-                else
-                    StartSimulation();
-            }
         }
     }
 }

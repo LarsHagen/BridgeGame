@@ -29,9 +29,16 @@ namespace BridgeGame
 
         public void StartSimulation()
         {
-            interactionController.HideGrid();
-            bridge.StartSimulation();
-            cameraController.SwitchToPlayCam();
+            if (bridge.IsValid())
+            {
+                interactionController.HideGrid();
+                bridge.StartSimulation();
+                cameraController.SwitchToPlayCam();
+            }
+            else
+            {
+                FindObjectOfType<Popup>(true).Show("Invalid bridge design");
+            }
         }
 
         public void StopSimulation()
